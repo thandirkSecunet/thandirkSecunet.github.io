@@ -1,1 +1,38 @@
-Hello World
+<!DOCTYPE html>
+<!-- saved from url=(0013)about:internet -->
+<!-- The above comment makes IE treat this as a web page -->
+<html>
+<head>
+  <title>WebUSB Test</title>
+  <style type="text/css">
+    body {margin: 60px; font: 12pt helvetica, arial, sans-serif;}
+  </style>
+</head>
+<script type="text/javascript">
+
+    function log(data) {
+        document.getElementById("log").textContent += data + "\n";
+    }
+
+    
+	function myFunction() {
+	console.log('Clicked');
+	var device;
+	navigator.usb.getDevices;
+	navigator.usb.requestDevice({ filters: [{}] })
+	.then(selectedDevice => {
+			device = selectedDevice;
+			console.log('Device Selected: ');
+			console.log(device.productName);
+			console.log(device.manufacturerName);
+			return device.open(); // Begin a session.
+		})
+		.catch(error => { console.log(error); });
+	}
+
+</script>
+<body>
+<h1>WebUSB Test</h1>
+<button onclick="myFunction()">Click me</button>
+</body>
+</html>
