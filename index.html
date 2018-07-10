@@ -1,8 +1,7 @@
 <html>
 <body>
-	<textarea id="printContent"></textarea>
-	<input type="submit" onclick="connectAndSendAPDU()" value="Send APDU"/>
-	<P>Type text into box and click on submit button.
+	<h1>WebUSB Test</h1>
+	<button onclick="connectAndSendAPDU()">Click me</button>
 	<script>
 	var device;
 	
@@ -16,19 +15,17 @@
 		.then(() => device.claimInterface(0))
 	}
 	function sendAPDU() {
-		var string = document.getElementById("printContent").value + "\n";
+		/*var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
 		var data = encoder.encode(string);
 		device.transferOut(1, data)
-		.catch(error => { console.log(error); })
+		.catch(error => { console.log(error); })*/
+		
+		let apdu = new Uint8Array([0x6F, 0x00, 0x00, 0x00, 0x05, 0x01, 0x00, 0x00, 0x00, 0x00, 0x10, 0x86, 0x00, 0x00, 0x00]);
+		device.transferOut(1, apdu);
 	}
 	function connectAndSendAPDU() {
 		if (device == null) {
-		
-			var string = document.getElementById("printContent").value + "\n";
-			var encoder = new TextEncoder();
-			var data = encoder.encode(string);
-			console.log(data);
 			
 			navigator.usb.requestDevice({ filters: [{}] })
 			.then(selectedDevice => {
