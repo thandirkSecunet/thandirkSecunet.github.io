@@ -1,35 +1,46 @@
 <html>
 <body>
 	<textarea id="printContent"></textarea>
-	<input type="submit" onclick="connectAndPrint()" value="Print"/>
+	<input type="submit" onclick="connectAndSendAPDU()" value="Send APDU"/>
 	<P>Type text into box and click on submit button.
 	<script>
 	var device;
+	
+	function log(data) {
+        document.getElementById("log").textContent += data + "\n";
+    }
+	
 	function setup(device) {
 		return device.open()
 		.then(() => device.selectConfiguration(1))
 		.then(() => device.claimInterface(0))
 	}
-	function print() {
+	function sendAPDU() {
 		var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
 		var data = encoder.encode(string);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
 	}
-	function connectAndPrint() {
+	function connectAndSendAPDU() {
 		if (device == null) {
+		
+			var string = document.getElementById("printContent").value + "\n";
+			var encoder = new TextEncoder();
+			var data = encoder.encode(string);
+			console.log(data);
+			
 			navigator.usb.requestDevice({ filters: [{}] })
 			.then(selectedDevice => {
 				device = selectedDevice;
 				console.log(device);
 				return setup(device);
 			})
-			.then(() => print())
+			.then(() => sendAPDU())
 			.catch(error => { console.log(error); })
 		}
 		else
-			print();
+			sendAPDU();
 	}
 	navigator.usb.getDevices()
 	.then(devices => {
